@@ -32,6 +32,9 @@ class Game:
                 output.append(self.__boardState[y][x])
         return output
 
+    def getTurn(self) -> int:
+        return self.__turn
+
     def printBoardState(self) -> None:
         for i in self.__boardState:
             for j in i:

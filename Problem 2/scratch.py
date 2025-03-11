@@ -92,12 +92,10 @@ def expandTree(root :Node, origin: list[str], expansionVal = Game.PLAYER_ONE_TOK
             child.move = index+1
 
             gameState = [child.metadata[0:3],child.metadata[3:6],child.metadata[6:9]]
-            if isTerminalState(gameState,expansionVal):
-                if expansionVal == Game.PLAYER_ONE_TOKEN:
-                    child.value = -1
-                else:
-                    child.value = 1
-                continue
+            if isTerminalState(gameState,Game.PLAYER_ONE_TOKEN):
+                child.value = -1
+            elif isTerminalState(gameState,Game.PLAYER_TWO_TOKEN):
+                child.value = 1
 
             if expansionVal == Game.PLAYER_ONE_TOKEN:
                 expandTree(child, child.metadata, expansionVal=Game.PLAYER_TWO_TOKEN)
@@ -110,11 +108,6 @@ def populateValue(root :Node, alpha = float('-inf'), beta = float('inf'), maximi
         values = []
         for child in root.children:
             values.append(populateValue(child,alpha,beta,not maximizingOn))
-            # for index, value in enumerate(values):
-                # if value == 2:
-                #     values[index] = 1
-                # elif value == -2:
-                #     values[index] = -1
 
             if maximizingOn:
                 alpha = max(alpha,values[-1])
@@ -124,9 +117,9 @@ def populateValue(root :Node, alpha = float('-inf'), beta = float('inf'), maximi
                 break
 
         if maximizingOn:
-            root.value = alpha
+            root.value = max(values)
         else:
-            root.value = beta
+            root.value = min(values)
     return root.value
 
 def trimTree(root: Node, trimState: list[str]):
@@ -135,10 +128,20 @@ def trimTree(root: Node, trimState: list[str]):
             return child.travel()
 
 def decideMove(root) -> int:
+    for child in root.children:
+        gameState = [child.metadata[0:3], child.metadata[3:6], child.metadata[6:9]]
+        if isTerminalState(gameState, Game.PLAYER_TWO_TOKEN):
+            print(f"[Terminal Move Detected]: {child.move}")
+            return child.move
+        elif isTerminalState(gameState, Game.PLAYER_ONE_TOKEN):
+            print(f"[Terminal Move Detected]: {child.move}")
+            return child.move
+
+
     bestAction = max([child.value for child in root.children])
-
+    print([child.value for child in root.children])
     reasonableActions = [child for child in root.children if child.value == bestAction]
-
+    print([child.move for child in reasonableActions])
     if len(reasonableActions) != 1:
         selectIndex = randint(0,len(reasonableActions)-1)
         return reasonableActions[selectIndex].move
@@ -160,7 +163,7 @@ def main():
     populateValue(root)
 
     # Make Move and Adjust tree to State Space
-    while not isTerminalState(game.getBoardStateDep(),game.getLastPlayerToken()):
+    while not isTerminalState(game.getBoardStateDep(),game.getLastPlayerToken()) and game.getTurn() < 9:
         if game.isPlayerOneTurn():
             game.printBoardState()
             game.doTurn(int(input()))
@@ -169,6 +172,8 @@ def main():
         root = trimTree(root,game.getBoardState())
         populateValue(root,maximizingOn=not game.isPlayerOneTurn())
         # root.printImmediateChildren()
+    if game.isPlayerOneTurn():
+        game.printBoardState()
 
 
 
