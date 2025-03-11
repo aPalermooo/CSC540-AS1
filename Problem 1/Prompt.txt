@@ -1,0 +1,34 @@
+Problem 1:
+The missionaries and cannibals problem is usually stated as follows. Three missionaries and three cannibals are on
+one side of a river, along with a boat that can hold one or two people. Find a way to get everyone to the other side
+without ever leaving a group of missionaries in one place outnumbered by the cannibals in that place.
+1. Implement and solve the problem optimally using an appropriate search algorithm. (10 points)
+2. Provide the optimal path from start to goal. (3 points)
+3. Is it a good idea to check for repeated states? (2 points)
+
+There are two requirements:
+    - wolves.len() <= sheep.len() for one side of the river
+    - an actor must be in the boat for the boat to move across the river
+
+There are two terminal state:
+    - wolves.len() > sheep.len() for one side of the river        -1
+    - All actors are on the other side of the river               +1
+
+On each turn, exists 5 possible actions:
+    - Take one missionary
+    - Take two missionary
+
+    - Take one cannibal
+    - Take two cannibal
+
+    - Take one missionary and one cannibal
+
+Each State can be modeled by the following string:
+    0000000
+    : the first three 0's represent the position of the wolves
+    : the next 0 represents the position of the boat
+    : the last three 0's represent the position of the sheep
+    0 (false) Represents that the actor is on the left
+    1 (true) represents that the actor is on the right
+
+    - The solution is found when the state description == 1111111

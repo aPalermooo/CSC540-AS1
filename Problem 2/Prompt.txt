@@ -1,0 +1,20 @@
+Problem 2:
+You will implement a Tic-Tac-Toe AI where: the first player (AI) plays optimally using Minimax, the second
+player (Human) inputs moves from the console, and the AI should be optimized using Alpha-Beta Pruning.
+Your program should:
+1. Display the Tic-Tac-Toe board after every move. (3 points)
+2. Allow the human player to enter their move via keyboard input, say (1-9). (3 points)
+3. Let the AI compute the best move using Minimax with Alpha-Beta pruning. (6 points)
+4. Continue until there is a winner or the board is full (draw). (3 points)
+
+Min Max Adversary search
+
+Terminal state is reached when
+    - There are three in a row on the board
+    - The board is full
+
+On each turn a user can use their move on an empty space
+On the subsequent turn, the computer will search to do their move in an optimal location.
+
+Since we cannot gaurentee that our opponent will play optimally against the agent, I will employ a Markov Decision Process
+    This is so that the agent will
