@@ -6,6 +6,70 @@ without ever leaving a group of missionaries in one place outnumbered by the can
 2. Provide the optimal path from start to goal. (3 points)
 3. Is it a good idea to check for repeated states? (2 points)
 
+Solution Generated in Simulation.py
+
+Sample Execution Output:
+Generating Possible Solutions...
+Tracing Optimal Solution...
+['C', 'C', 'C']	B			[]
+['M', 'M', 'M']				[]
+
+[C, None]
+['C', 'C']			B	['C']
+['M', 'M', 'M']				[]
+
+[C, None]
+['C', 'C', 'C']	B			[]
+['M', 'M', 'M']				[]
+
+[C, C]
+['C']			B	['C', 'C']
+['M', 'M', 'M']				[]
+
+[C, None]
+['C', 'C']	B			['C']
+['M', 'M', 'M']				[]
+
+[C, C]
+[]			B	['C', 'C', 'C']
+['M', 'M', 'M']				[]
+
+[C, None]
+['C']	B			['C', 'C']
+['M', 'M', 'M']				[]
+
+[M, M]
+['C']			B	['C', 'C']
+['M']				['M', 'M']
+
+[C, M]
+['C', 'C']	B			['C']
+['M', 'M']				['M']
+
+[M, M]
+['C', 'C']			B	['C']
+[]				['M', 'M', 'M']
+
+[C, None]
+['C', 'C', 'C']	B			[]
+[]				['M', 'M', 'M']
+
+[C, C]
+['C']			B	['C', 'C']
+[]				['M', 'M', 'M']
+
+[C, None]
+['C', 'C']	B			['C']
+[]				['M', 'M', 'M']
+
+[C, C]
+[]			B	['C', 'C', 'C']
+[]				['M', 'M', 'M']
+
+
+Process finished with exit code 0
+
+
 There are two requirements:
     - wolves.len() <= sheep.len() for one side of the river
     - an actor must be in the boat for the boat to move across the river

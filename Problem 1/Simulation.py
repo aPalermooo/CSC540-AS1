@@ -1,4 +1,13 @@
-
+########################################
+#   Name:           Simulation.py
+#   Description:    AS1 : Problem 1
+#                       Combines all modules and simulates the Cannibal/Missionary problem to find an optimal solution
+#   Author:         Xander Palermo <ajp2s@missouristate.edu>
+#   Date:           14 March 2025
+#
+#   Class:          CSC 540 - Introduction to Artificial Intelligence
+#   Teacher:        Dr. Rahul Dubey
+########################################
 import heapq
 from Node import Node
 from State import State, Pair

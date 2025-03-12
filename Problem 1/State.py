@@ -1,3 +1,13 @@
+########################################
+#   Name:           State.py
+#   Description:    AS1 : Problem 1
+#                       An abstraction of the Cannibal/Missionary Problem: the possible actions can be simulated
+#   Author:         Xander Palermo <ajp2s@missouristate.edu>
+#   Date:           14 March 2025
+#
+#   Class:          CSC 540 - Introduction to Artificial Intelligence
+#   Teacher:        Dr. Rahul Dubey
+########################################
 from typing import Optional
 
 class Pair:
