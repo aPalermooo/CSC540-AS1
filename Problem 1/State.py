@@ -127,23 +127,6 @@ class State:
         return all(self.__cannibalsState) and all(self.__missionariesState)
     '''----------------------'''
 
-
-    def isTerminalState(self) -> bool:
-        """
-        Evaluates conditions of the distribution of the actors to determine if it is a losing terminal state
-        :return: True if the state results in a lost
-        """
-        if ( len(self.__cannibalsRight) == 3 and            #Victory Condition
-            len(self.__missionariesRight) == 3 ):               #Returning false ensures that the state is not removed from the tree
-            return False
-
-        if 0 < len(self.__missionariesLeft) < len(self.__cannibalsLeft):    #Failure, Cannibal eats missionary
-            return True
-        if 0 < len(self.__missionariesRight) < len(self.__cannibalsRight):  #Failure, Cannibal eats missionary
-            return True
-
-        return False            #No Goal is meet yet
-
     def printState(self) -> None:
         """
         Allows for debug operations and visualization of where the actors are in a given moment in time
@@ -166,6 +149,22 @@ class State:
         print(self.__missionariesRight, end = "")   #Missionaries on Left
         print()
         print()
+
+    def isTerminalState(self) -> bool:
+        """
+        Evaluates conditions of the distribution of the actors to determine if it is a losing terminal state
+        :return: True if the state results in a lost
+        """
+        if ( len(self.__cannibalsRight) == 3 and            #Victory Condition
+            len(self.__missionariesRight) == 3 ):               #Returning false ensures that the state is not removed from the tree
+            return False
+
+        if 0 < len(self.__missionariesLeft) < len(self.__cannibalsLeft):    #Failure, Cannibal eats missionary
+            return True
+        if 0 < len(self.__missionariesRight) < len(self.__cannibalsRight):  #Failure, Cannibal eats missionary
+            return True
+
+        return False            #No Goal is meet yet
 
     def isValidMove(self, actor1 : bool, actor2 : Optional[bool]) -> bool:
         """
