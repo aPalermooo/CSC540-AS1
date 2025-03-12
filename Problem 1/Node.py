@@ -1,8 +1,9 @@
 from typing import Optional
+from State import State
 
 
 class Node:
-    def __init__(self, metaData, root : object = None, parent : "Node"= None):
+    def __init__(self, metaData, root : "Node" = None, parent : "Node"= None):
         #Tree Structure
         self.__root = self if root is None else root
         self.__parent = parent
@@ -13,6 +14,10 @@ class Node:
         self.__heuristic = 0
         self.__cost = 0
 
+    '''--- Override Methods---'''
+    def __lt__(self, other : "Node"):
+        return self.evaluate() < other.evaluate()
+
     '''--- Getter Methods ---'''
     def getRoot(self) -> "Node":
         return self.__root
@@ -20,7 +25,7 @@ class Node:
     def getParent(self) -> Optional["Node"]:
         return self.__parent
 
-    def getMetadata(self):
+    def getMetadata(self) -> State:
         return self.__metaData
 
     def getChildren(self) -> list["Node"]:
@@ -29,11 +34,17 @@ class Node:
     def hasChildren(self) -> bool:
         return len(self.getChildren()) > 0
 
+    def numOfChildren(self):
+        return len(self.getChildren())
+
     def getHeuristic(self) -> int:
         return self.__heuristic
 
     def getCost(self) -> int:
         return self.__cost
+
+    def evaluate(self):
+        return self.getHeuristic() + self.getCost()
     '''----------------------'''
 
     '''--- Setter Methods ---'''

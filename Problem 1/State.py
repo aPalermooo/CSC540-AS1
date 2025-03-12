@@ -1,11 +1,24 @@
 from typing import Optional
 
+class Pair:
+    def __init__(self, first, second):
+        self.first = first
+        self.second = second
+
+    def print(self):
+        print(f"[{self.first}, {self.second}]")
 
 '''--- CONSTANTS ---'''
 LEFT = False            #"bit" representation of direction
 RIGHT = True
 CANNIBAL = 'C'          #"char" representation of actor type
 MISSIONARY = 'M'
+
+POSSIBLE_ACTIONS = [
+    Pair(CANNIBAL,None), Pair(CANNIBAL,CANNIBAL),
+    Pair(MISSIONARY,None), Pair(MISSIONARY,MISSIONARY),
+    Pair(CANNIBAL,MISSIONARY)
+]
 '''-----------------'''
 
 class State:
@@ -26,18 +39,13 @@ class State:
         Updates the states such that the state now reflects the placement of the actors
         :return: None
         """
-        self.__cannibalsState.clear()
-        self.__missionariesState.clear()
-        self.__cannibalsState = [LEFT for _ in self.__cannibalsLeft]
-        self.__cannibalsState += [RIGHT for _ in self.__cannibalsRight]
-
-        self.__missionariesState = [LEFT for _ in self.__missionariesLeft]
-        self.__missionariesState += [RIGHT for _ in self.__missionariesRight]
-
+        self.__cannibalsState = [LEFT] * len(self.__cannibalsLeft) + [RIGHT] * len(self.__cannibalsRight)
+        self.__missionariesState = [LEFT] * len(self.__missionariesLeft) + [RIGHT] * len(self.__missionariesRight)
 
     def __init__(self, cannibalsState : list[bool] = None,
                  boatState : bool = None,
-                 missionariesState : list[bool] = None):
+                 missionariesState : list[bool] = None,
+                 prevAction : Optional[Pair] = None):
         """
         Sets up the positioning of all the "actors"/pieces of the problem
         :param cannibalsState:      The state as of which side of the river each of the 3 cannibals are on
@@ -65,6 +73,7 @@ class State:
         self.__missionariesLeft : list[str] = []
         self.__missionariesRight : list[str] = []
 
+        self.__prevAction = prevAction
         self.__distributeActors()
 
 
@@ -81,29 +90,49 @@ class State:
         :return: true if the boat is on the left side of the river, false if it is on the right side
         """
         return not self.__boatState
+
+    def getPrevAction(self) -> Optional[Pair]:
+        return self.__prevAction
+
+    def generateHeuristic(self) -> int:
+        boatPenalty = 0 if not self.isBoatOnLeft() else 1
+        return len(self.__cannibalsLeft) + len(self.__missionariesLeft) - boatPenalty
+
+    def getEncoding(self):
+        """
+        :return: binary string version of the state
+        """
+        output = ""
+        for bit in self.__cannibalsState:
+            output += str(int(bit))
+        output += str(int(self.__boatState))
+        for bit in self.__missionariesState:
+            output += str(int(bit))
+        return output
+
+    def isComplete(self):
+        """
+        :return: Is winning/target state
+        """
+        return all(self.__cannibalsState) and all(self.__missionariesState)
     '''----------------------'''
 
 
-    def isTerminalState(self) -> int:
+    def isTerminalState(self) -> bool:
         """
-        Evaluates a handful of conditions of the distribution of the actors to determine if it is a terminal state
-        :return: 1 if state is a successful terminal state, -1 if state is a failure terminal state, 0 if state is not a terminal state
+        Evaluates conditions of the distribution of the actors to determine if it is a losing terminal state
+        :return: True if the state results in a lost
         """
         if ( len(self.__cannibalsRight) == 3 and            #Victory Condition
-            len(self.__missionariesRight) == 3 ):
-            return 1
+            len(self.__missionariesRight) == 3 ):               #Returning false ensures that the state is not removed from the tree
+            return False
 
-        if len(self.__cannibalsLeft) > len(self.__missionariesLeft):    #Failure, Cannibal eats missionary
-            return -1
-        if len(self.__cannibalsRight) > len(self.__missionariesRight):  #Failure, Cannibal eats missionary
-            return -1
+        if 0 < len(self.__missionariesLeft) < len(self.__cannibalsLeft):    #Failure, Cannibal eats missionary
+            return True
+        if 0 < len(self.__missionariesRight) < len(self.__cannibalsRight):  #Failure, Cannibal eats missionary
+            return True
 
-        if len(self.__missionariesLeft) == 0 and len(self.__cannibalsLeft) > 1:     #Failure, Cannibals eats each other
-            return -1
-        if len(self.__missionariesRight) == 0 and len(self.__cannibalsRight) > 1:   #Failure, Cannibals eats each other
-            return -1
-
-        return 0            #No Goal is meet yet
+        return False            #No Goal is meet yet
 
     def printState(self) -> None:
         """
@@ -136,9 +165,10 @@ class State:
         :param actor2: The Actor type to be transferred across the river **CAN BE NONE**
         :return: True if valid move is proposed, False if the move proposed is invalid
         """
-        if actor1 is not CANNIBAL or actor1 is not MISSIONARY:                          #Checks if the parameters typed correctly
+        validTokens = [CANNIBAL,MISSIONARY]
+        if actor1 not in validTokens:                          #Checks if the parameters typed correctly
             return False
-        if actor2 is not CANNIBAL or actor2 is not MISSIONARY or actor2 is not None:
+        if actor2 not in validTokens and actor2 is not None:
             return False
 
         if self.isBoatOnLeft():                             #Decide from what side of the river the boat is loading from
@@ -228,28 +258,52 @@ class State:
 
         self.__boat.clear()                                 #Remove Actors from boat
 
-    def doTurn(self, actor1 : bool, actor2 : Optional[bool] = None) -> Optional[object]:
+    def doTurn(self, actor1 : bool, actor2 : Optional[bool] = None) -> Optional["State"]:
         """
         Completes a whole turn of loading the boat, moving the boat across the river, and placing the occupants on the other side
         :param actor1: The Actor type to be transferred across river **MUST BE FILLED*
         :param actor2: The Actor type to be transferred across the river **CAN BE NONE**
         :return: a copy of the state object with the transaction completed
         """
-        if not self.isValidMove(actor1, actor2):
+
+
+        copy = State(cannibalsState=self.__cannibalsState,
+                     boatState=self.__boatState,
+                     missionariesState=self.__missionariesState,
+                     prevAction=Pair(actor1,actor2))
+
+        if not copy.isValidMove(actor1, actor2):
+            # print(f"INVALID MOVE: {self.__cannibalsState} {self.__missionariesState}\t {actor1},{actor2}")
             return None
-
-        copy = State(self.__cannibalsState, self.__boatState, self.__missionariesState)
-
         copy.__loadBoat(actor1, actor2)
         copy.__sailBoat()
         copy.__unloadBoat()
+        if copy.isTerminalState():
+            # print("Terminal")
+            return None
         copy.__adjustState()
+        # self.printState()
         return copy
 
+    def computeAllActions(self) -> Optional[list["State"]]:
+        """
+        Creates a state for each possible action that can originate from the given state
+        :return: A list of states after completing the action
+        """
+        potentialStates = []
+        for action in POSSIBLE_ACTIONS:
+            statePrime = self.doTurn(action.first,action.second)
+            if statePrime is not None:
+                potentialStates.append(statePrime)
+        return potentialStates if len(potentialStates) > 0 else None
 
 def main():
     state = State()
-    state.printState()
+    print(state.getEncoding())
+    L = state.computeAllActions()
+    for element in L:
+        print(element.getEncoding())
+
 
 if __name__ == "__main__":
     main()
