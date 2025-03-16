@@ -47,13 +47,15 @@ class HillClimber:
             state = self.__checkNeighbors()
             self.__puzzle.setBoard(state)
             self.__graphData.append((iteration, self.__checkHeuristic(self.__puzzle)))
-            if randint(1,100) <= RANDOM_RESET_CHANCE:
+
+
+            if randint(1,100) <= RANDOM_RESET_CHANCE:       #Random Restart
                 self.__bestBoards.append((self.__checkHeuristic(self.__puzzle),
                                           self.__puzzle.getState()))
                 self.__puzzle.randomize()
             self.__currentHeuristic = self.__checkHeuristic(self.__puzzle)
 
-        self.__bestBoards.sort(key = lambda x: x[0])
+        self.__bestBoards.sort(key = lambda x: x[0])            #Collect best answer to be displayed in console
         self.__puzzle.setBoard(self.__bestBoards[-1][1])
 
 
@@ -83,9 +85,9 @@ class HillClimber:
         neighborStates : list[tuple[int, list[int]]] = []
         for action in NEIGHBOR_ACTIONS:
             possiblePuzzle = deepcopy(self.__puzzle)
-            success = getattr(possiblePuzzle, action)()
+            success = getattr(possiblePuzzle, action)()     #Calls movement method on puzzle
             if bool(success):
-                neighborStates.append((self.__checkHeuristic(possiblePuzzle),
+                neighborStates.append((self.__checkHeuristic(possiblePuzzle),   #If state is different then current state, add to potential actions list
                                        possiblePuzzle.getState()))
         neighborStates.sort(key=lambda x: x[0])
         return neighborStates[-1][1]

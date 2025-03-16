@@ -39,12 +39,21 @@ class EightQueen(Matrix):
 
     '''--- Setter Methods ---'''
     def randomize(self):
+        """
+        Sets the board to a randomized state
+        Ever queen token is placed on the x-axis with a y amount of displacement
+        :return:
+        """
         self._clearBoard()
         for x in range(self.LENGTH):
             y = randint(0,self.LENGTH-1)
             self.setValue(QUEEN_TOKEN,x,y)
 
     def setBoard(self,state:list[int]) -> int:
+        """
+        Sets the board to a predetermined state
+        :return: 0 if the state is invalid
+        """
         self._clearBoard()
         if len(state) < self.LENGTH:
             return 0
@@ -55,6 +64,10 @@ class EightQueen(Matrix):
 
 
     def checkHorizontal(self) -> list[int]:
+        """
+        Checks if any queen can capture another along the horizontal axis
+        :return: the number of queens that violate the rule
+        """
         summation = []
 
         for y in range(self.LENGTH):
@@ -64,13 +77,20 @@ class EightQueen(Matrix):
         return summation
 
     def checkPositiveDiagonal(self):
+        """
+        Checks if any queen can capture another along a diagonal axis (bottom left -> top right)
+        :return: the number of queens that violate the rule
+        """
         summation = []
         for diagonalIndex in range(-self.getLength()+1,self.getLength(),1):
-            # print(np.diagonal(self._getMatrix(),offset=diagonalIndex))
             summation.append(sum(+1 for token in np.diagonal(self._getMatrix(),offset=diagonalIndex) if token == QUEEN_TOKEN))
         return summation
 
     def checkNegativeDiagonal(self):
+        """
+        Checks if any queen can capture another along a diagonal axis (bottom right -> top left)
+        :return: the number of queens that violate the rule
+        """
         summation = []
         for diagonalIndex in range(-self.getLength()+1,self.getLength(),1):
             # print(np.diagonal(np.fliplr(self._getMatrix()),offset=diagonalIndex))
@@ -78,6 +98,7 @@ class EightQueen(Matrix):
         return summation
 
     def print(self, fill = "N/A") -> None:
+        """calls parent function with special parameters"""
         super().print(fill = "_")
 
 def main():
