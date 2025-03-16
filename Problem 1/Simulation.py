@@ -40,13 +40,18 @@ class Simulation:
             return
 
         for state in possibleStates:
-            if state.getEncoding() in self.__exploredNodes:             #If a node has been explored already, it is not an optimal solution
-                continue                                                    #Discard
+            # print(state.getEncoding())        #dbug
+            # print(self.__exploredNodes)
+            if state.getEncoding() in self.__exploredNodes:  #If a node has been explored already, it is not an optimal solution
+                continue                                        #Discard
             self.__exploredNodes.add(state.getEncoding())
             child = node.createChild(state)
-            child.setHeuristic(state.generateHeuristic())
+            child.setHeuristic(state.generateHeuristic() + child.getCost())
             heapq.heappush(self.__treeHeap, child)                #Building a priority queue proactively for A*
-            self.__generateTree(child)
+            # if child.getCost() == 1:      #dbug
+            #     print("gen")
+        for ch in node.getChildren():           #Recursively build tree Top to Bottom Left to Right
+            self.__generateTree(ch)
 
     def getOptimalPath(self) -> list[Pair]:
         """

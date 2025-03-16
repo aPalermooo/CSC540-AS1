@@ -19,6 +19,9 @@ class MiniMax:
         #         grandchild.getMetadata().print()
         #         print()
 
+    # def __getPossibleMoves(self, node):
+
+
     def __expandTree (self, node, maximize : bool = True):
         for index in range(1,10):
             possibleGame = copy.deepcopy(node.getMetadata())
@@ -30,7 +33,7 @@ class MiniMax:
                 child.setHeuristic(heuristic)
                 child.setLastMove(index)
                 if heuristic is not None or child.getCost() > MAX_SEARCH:
-                    return
+                    continue
                 self.__expandTree(child, not maximize)
         if not node.getChildren():
             return
@@ -65,6 +68,12 @@ class MiniMax:
         for index in range(len(children)):
             if children[index].getHeuristic() == 1:
                 return index
+        for index in range(len(children)):
+            if children[index].getHeuristic() == 0:
+                return index
+
+    def declareOptimalMove(self) -> int:
+
 
 
     def doPlayerTurn(self):
@@ -77,7 +86,7 @@ class MiniMax:
         self.__game.doTurn(move)
         self.__followGame()
 
-    def __alternateTerm(self):
+    def __alternateTurn(self):
         player = self.__game.whichPlayer()
         if player == 1:
             return "doPlayerTurn"
@@ -86,7 +95,7 @@ class MiniMax:
 
     def playGame(self):
         while not self.__game.isGameOver():
-            playerCall = self.__alternateTerm()
+            playerCall = self.__alternateTurn()
             getattr(self, playerCall)()
 
 

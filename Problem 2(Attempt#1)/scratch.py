@@ -1,7 +1,14 @@
 from random import randint
-
+from Matrix import Matrix
 from TicTacToe import Game
 
+BOARD_SIZE = 3
+
+PLAYER_CONTROL = Matrix(3)
+for num in range(0, 9):
+    x = num % BOARD_SIZE
+    y = BOARD_SIZE - 1 - (num // BOARD_SIZE)
+    PLAYER_CONTROL.setValue(num + 1, x, y)
 
 def isTerminalState(boardState : list[list[str]], playerToken: str) -> bool:
     ##Terminal condition is reached when there exists 3 in a row of a players token anywhere on the board
@@ -131,17 +138,17 @@ def decideMove(root) -> int:
     for child in root.children:
         gameState = [child.metadata[0:3], child.metadata[3:6], child.metadata[6:9]]
         if isTerminalState(gameState, Game.PLAYER_TWO_TOKEN):
-            print(f"[Terminal Move Detected]: {child.move}")
+            # print(f"[Terminal Move Detected]: {child.move}")
             return child.move
         elif isTerminalState(gameState, Game.PLAYER_ONE_TOKEN):
-            print(f"[Terminal Move Detected]: {child.move}")
+            # print(f"[Terminal Move Detected]: {child.move}")
             return child.move
 
 
     bestAction = max([child.value for child in root.children])
-    print([child.value for child in root.children])
+    # print([child.value for child in root.children])
     reasonableActions = [child for child in root.children if child.value == bestAction]
-    print([child.move for child in reasonableActions])
+    # print([child.move for child in reasonableActions])
     if len(reasonableActions) != 1:
         selectIndex = randint(0,len(reasonableActions)-1)
         return reasonableActions[selectIndex].move
@@ -165,8 +172,10 @@ def main():
     # Make Move and Adjust tree to State Space
     while not isTerminalState(game.getBoardStateDep(),game.getLastPlayerToken()) and game.getTurn() < 9:
         if game.isPlayerOneTurn():
+            PLAYER_CONTROL.print()
+            print()
             game.printBoardState()
-            game.doTurn(int(input()))
+            game.doTurn(int(input("Enter your move:")))
         else:
             game.doTurn(decideMove(root))
         root = trimTree(root,game.getBoardState())

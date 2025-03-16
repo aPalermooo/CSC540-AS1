@@ -64,7 +64,7 @@ class TicTacToe:
             return -1
 
         # print(self.__board.checkAll())
-        self.__complete = nextToken == self.__board.checkAll()
+        self.__complete = bool( self.__board.checkAll() )
         return int(self.__complete)
 
     def promptUser(self):
@@ -72,9 +72,10 @@ class TicTacToe:
         print()
         self.print()
         inputIsValid = -1
-        while inputIsValid != 0:
+        while inputIsValid < 0:
             userInput = input("Enter your next move (1-9):")
             if not userInput.isdigit():
+                print("deny")
                 continue
             userInput = int(userInput)
             inputIsValid = self.doTurn(userInput)
@@ -96,9 +97,8 @@ def testDoTurn():
 
 def testPrompt():
     game = TicTacToe()
-    game.promptUser()
-    game.promptUser()
-    game.promptUser()
+    while not game.isGameOver():
+        game.promptUser()
     game.print()
 
 def main():

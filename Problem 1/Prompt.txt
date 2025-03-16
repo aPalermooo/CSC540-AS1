@@ -14,14 +14,6 @@ Tracing Optimal Solution...
 ['C', 'C', 'C']	B			[]
 ['M', 'M', 'M']				[]
 
-[C, None]
-['C', 'C']			B	['C']
-['M', 'M', 'M']				[]
-
-[C, None]
-['C', 'C', 'C']	B			[]
-['M', 'M', 'M']				[]
-
 [C, C]
 ['C']			B	['C', 'C']
 ['M', 'M', 'M']				[]
@@ -68,6 +60,7 @@ Tracing Optimal Solution...
 
 
 Process finished with exit code 0
+
 
 
 There are two requirements:
