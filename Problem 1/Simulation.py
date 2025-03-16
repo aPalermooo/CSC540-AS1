@@ -12,7 +12,7 @@ import heapq
 from Node import Node
 from State import State, Pair
 
-MAX_SEARCH_DEPTH = 15
+MAX_SEARCH_DEPTH = 13
 
 class Simulation:
 
