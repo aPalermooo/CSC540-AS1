@@ -3,4 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9 (Xander_Palermo_AI_AS1)" />
   </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name=".virtualenvs" project-jdk-type="Python SDK" />
 </project>

@@ -20,6 +20,15 @@ class TicTacToe:
         self.__nextToken = PLAYER_TWO_TOKEN if self.__nextToken == PLAYER_ONE_TOKEN else PLAYER_ONE_TOKEN
         return self.__nextToken
 
+    def isGameOver(self):
+        return self.__complete
+
+    def whichPlayer(self) -> int:
+        if self.__nextToken == PLAYER_TWO_TOKEN:
+            return 1
+        else:
+            return 2
+
     def getState(self):
         state = []
         for row in self.__board.getMatrix():

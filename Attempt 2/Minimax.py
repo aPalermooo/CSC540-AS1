@@ -1,4 +1,8 @@
 import copy
+from os import abort
+
+from numpy.f2py.auxfuncs import throw_error
+
 from Node import Node
 from TicTacToe import TicTacToe
 
@@ -15,17 +19,28 @@ class MiniMax:
         #         grandchild.getMetadata().print()
         #         print()
 
-    def __expandTree (self, node):
+    def __expandTree (self, node, maximize : bool = True):
         for index in range(1,10):
             possibleGame = copy.deepcopy(node.getMetadata())
             childExists = possibleGame.doTurn(index)
             # print(childExists)
             if childExists >= 0:
                 child = node.createChild(possibleGame)
-                child.setHeuristic(possibleGame.generateHeuristic())
-                if child.getCost() > MAX_SEARCH:
+                heuristic = possibleGame.generateHeuristic()
+                child.setHeuristic(heuristic)
+                child.setLastMove(index)
+                if heuristic is not None or child.getCost() > MAX_SEARCH:
                     return
-                self.__expandTree(child)
+                self.__expandTree(child, not maximize)
+        if not node.getChildren():
+            return
+        elif maximize:
+            heuristic = (max([child.getHeuristic() for child in node.getChildren() if child.getHeuristic() is not None]
+                             ,default=0))
+        else:
+            heuristic = (min([child.getHeuristic() for child in node.getChildren() if child.getHeuristic() is not None]
+                             ,default=0))
+        node.setHeuristic(heuristic)
 
     def __followGame(self):
         children = self.__root.getChildren()
@@ -37,30 +52,48 @@ class MiniMax:
             if child.getMetadata().getState() == self.__game.getState():
                 select = index
                 break
+        if select is None:
+            select = 0
         self.__root = children[select]
         self.__root.setToRoot()
-        for ch in self.__root.getChildren():
-            ch.getMetadata().print()
+        # for ch in self.__root.getChildren():
+        #     ch.getMetadata().print()
 
-    def doPlayerTurn(self, prompt):
-        self.__game.doTurn(prompt)
+    def findOptimalMove(self) -> int:
+        maxIndex = 0
+        children = self.__root.getChildren()
+        for index in range(len(children)):
+            if children[index].getHeuristic() == 1:
+                return index
+
+
+    def doPlayerTurn(self):
+        self.__game.promptUser()
         self.__followGame()
-        self.__game.doTurn(1)
+
+    def doComputerTurn(self):
+        move = self.findOptimalMove()
+        self.__root.printImmediateChildren()
+        self.__game.doTurn(move)
         self.__followGame()
-        self.__game.doTurn(5)
-        self.__followGame()
-        self.__game.doTurn(8)
-        self.__followGame()
-        self.__game.doTurn(7)
-        self.__followGame()
-        self.__root.getMetadata().print()
-        for child in self.__root.getChildren():
-            child.getMetadata().print()
+
+    def __alternateTerm(self):
+        player = self.__game.whichPlayer()
+        if player == 1:
+            return "doPlayerTurn"
+        else:
+            return "doComputerTurn"
+
+    def playGame(self):
+        while not self.__game.isGameOver():
+            playerCall = self.__alternateTerm()
+            getattr(self, playerCall)()
+
 
 
 def main():
     mini = MiniMax()
-    mini.doPlayerTurn(3)
+    mini.playGame()
 
 if __name__ == "__main__":
     main()
