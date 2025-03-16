@@ -1,0 +1,5 @@
+Problem 3:
+Generate a large number of 8-puzzle and 8-queens instances and solve them by hill climbing with random restart.
+1. Find appropriate heuristic for both problems. (2 points)
+2. Run the algorithm for at-least 1000 iteration. (4 points)
+3. Plot the best cost found so far against iteration. (4 points)

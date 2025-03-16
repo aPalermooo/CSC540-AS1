@@ -1,6 +1,6 @@
 ########################################
 #   Name:           Node.py
-#   Description:    AS1 : Problem 3
+#   Description:    AS1 : Problem 3(Part 1)
 #                       A class that allows for the dynamic creation of an unsorted tree
 #   Author:         Xander Palermo <ajp2s@missouristate.edu>
 #   Date:           14 March 2025

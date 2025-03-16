@@ -30,7 +30,7 @@ class Matrix:
     def getLength(self) -> int:
         return self.LENGTH
 
-    def getMatrix(self) -> numpy.array:
+    def _getMatrix(self) -> numpy.array:
         return self.__matrix
 
     def getCoordinateValue(self, x: int, y: int) -> Optional[int]:
@@ -41,19 +41,20 @@ class Matrix:
     '''----------------------'''
 
     '''--- Setter Methods ---'''
-    def setValue(self, value, x:int, y:int) -> bool:
+    def setValue(self, value, x:int, y:int, Override : bool = False) -> int:
         """
 
-        :param value: Value to be placed in the matrix
-        :param x:     The x-coordinate that the value should be placed at
-        :param y:     The y-Coordinate that the value should be placed at
-        :return:      True if the value was placed successfully, False if not
+        :param value: The value to be placed into the Matrix
+        :param x:       The x coordinate within the Matrix that is desired to be set
+        :param y:       The y coordinate within the Matrix that is desired to be set
+        :param Override: If set to True, will not check if there is already a value set in the coordinate and will overwrite it.
+        :return:        If the value is set in the coordinate, returns 1, else returns 0. If Override == True, will always return 1
         """
-        if self.isValidCoordinate(x,y) and self.getCoordinateValue(x,y) is None:
+        if Override or self.getCoordinateValue(x,y) is None:
             self.__matrix[y][x] = value
-            return True
+            return 1
         else:
-            return False
+            return 0
     '''----------------------'''
 
     def checkHorizontal(self):
@@ -78,7 +79,7 @@ class Matrix:
             token = self.getCoordinateValue(x, 0)
             if token is self.PLACEHOLDER:
                 continue
-            if all(self.getCoordinateValue(x,y) == token for y in range(self.LENGTH)):
+            if all(self.getCoordinateValue(x,y) for y in range(self.LENGTH)):
                 return token
         return None
 

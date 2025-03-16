@@ -21,7 +21,6 @@ class Node:
         self.__metaData = metaData
         self.__heuristic = 0
         self.__cost = 0
-        self.__move = None
 
     '''--- Override Methods---'''
     def __lt__(self, other : "Node"):
@@ -52,9 +51,6 @@ class Node:
     def getCost(self) -> int:
         return self.__cost
 
-    def getLastMove(self) -> int:
-        return self.__move
-
     def evaluate(self):
         return self.getHeuristic() + self.getCost()
     '''----------------------'''
@@ -70,12 +66,6 @@ class Node:
 
     def setCost(self, cost : int) -> None:
         self.__cost = cost
-
-    def setLastMove(self, move: int) -> None:
-        self.__move = move
-
-    def setToRoot(self):
-        self.__parent = None
 
     def createChild(self, metaData) -> "Node":
         """
@@ -95,7 +85,7 @@ class Node:
         :return: None
         """
         print("----------------")
-        self.getMetadata().print()
+        print(f"|{self.getMetadata()}|")
         print(f"|{self.getHeuristic()}|")
         print(f"|{self.getCost()}|")
         print("----------------")

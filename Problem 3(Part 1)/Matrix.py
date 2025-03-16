@@ -1,6 +1,6 @@
 ########################################
 #   Name:           Matrix.py
-#   Description:    AS1 : Problem 3
+#   Description:    AS1 : Problem 3(Part 1)
 #                       Creates an object representation of a Matrix that can be used to simulate a gameboard
 #   Author:         Xander Palermo <ajp2s@missouristate.edu>
 #   Date:           16 March 2025
