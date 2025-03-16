@@ -1,3 +1,15 @@
+########################################
+#   Name:           EightQueen.py
+#   Description:    AS1 : Problem 3(Part 1)
+#                       An object representation of a 8x8 board with 8 queens placed upon it.
+#                           The goal is to arrange them in such a way that none of the queens can complete a legal move
+#                           that would capture another queen.
+#   Author:         Xander Palermo <ajp2s@missouristate.edu>
+#   Date:           16 March 2025
+#
+#   Class:          CSC 540 - Introduction to Artificial Intelligence
+#   Teacher:        Dr. Rahul Dubey
+########################################
 from random import randint
 from Matrix import Matrix
 import numpy as np

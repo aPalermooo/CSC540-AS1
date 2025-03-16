@@ -1,3 +1,14 @@
+########################################
+#   Name:           HillClimber.py
+#   Description:    AS1 : Problem 3(Part 1)
+#                       Runs a greedy search algorithm on the attached EightQueen.py to find a completed state of the
+#                           problem in such that no queen can capture another
+#   Author:         Xander Palermo <ajp2s@missouristate.edu>
+#   Date:           16 March 2025
+#
+#   Class:          CSC 540 - Introduction to Artificial Intelligence
+#   Teacher:        Dr. Rahul Dubey
+########################################
 import heapq
 from matplotlib import pyplot as mlt
 from copy import deepcopy
@@ -37,7 +48,9 @@ class HillClimber:
 
         self.__bestBoards = []
         self.__graphData = []
-        self.game.print("\nStarting Hill Climber Algorithm...")
+        print("Starting Game state is:")
+        self.game.print()
+        print("\nStarting Hill Climber Algorithm...")
         # ran = 0
         for i in range(NUM_ITERATIONS):
             state = self.__checkNeighbors()
@@ -56,8 +69,9 @@ class HillClimber:
         if self.__bestBoards:       #If there were random restarts, pick the local maxima saved with the highest heuristic
             self.game.setBoard(min(self.__bestBoards).right)
         print("\n")
+        print("Computed best game state is:")
         self.game.print()
-        print(len(self.__bestBoards))
+        # print(len(self.__bestBoards))
         self.plot()
 
     @staticmethod
@@ -109,7 +123,6 @@ class HillClimber:
         mlt.xlabel("Iteration")
         mlt.ylabel("Heuristic Value")
         mlt.show()
-        print(self.__checkHeuristic(self.game))
 
 def main():
     hill = HillClimber()

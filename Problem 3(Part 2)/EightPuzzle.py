@@ -1,5 +1,14 @@
+########################################
+#   Name:           HillClimber.py
+#   Description:    AS1 : Problem 3(Part 2)
+#                       An object representation of an eight tile slide puzzle
+#   Author:         Xander Palermo <ajp2s@missouristate.edu>
+#   Date:           16 March 2025
+#
+#   Class:          CSC 540 - Introduction to Artificial Intelligence
+#   Teacher:        Dr. Rahul Dubey
+########################################
 import random
-
 from Matrix import Matrix
 
 COORDINATES =  [(0,2), (1,2), (2,2),
@@ -12,10 +21,10 @@ class EightPuzzle:
         self.__board = None
         self.__complete = False
         if state is None:
-            self.randomizeBoard()
+            self.randomize()
         else:
             self.setBoard(state)
-        print(self.__emptySpace)
+        # print(self.__emptySpace)
 
     '''--- Getter Methods ---'''
     def getState(self) -> list[int | None]:
@@ -35,7 +44,7 @@ class EightPuzzle:
     '''----------------------'''
 
     '''--- Setter Methods ---'''
-    def randomizeBoard(self):
+    def randomize(self):
         """
         Randomizes the state of the puzzle
         :return: the empty tile within the randomized puzzle
@@ -74,10 +83,10 @@ class EightPuzzle:
         Swaps the empty tile in the matrix with a pre-established coordinate
         :param selected: the coordinate that the value being placed into the empty tile will be taken from.
         :post: The tile that is selected becomes the new empty tile of the matrix
-        :return: -1 if the move cannot be completed, 1 if otherwise
+        :return: 0 if the move cannot be completed, 1 if otherwise
         """
         if selected not in COORDINATES:
-            return -1
+            return 0
         self.__board.setValue(self.__board.getCoordinateValue(selected[0], selected[1]), #Place selected tile in empty place
                               self.__emptySpace[0], self.__emptySpace[1])
         self.__emptySpace = (selected[0], selected[1])

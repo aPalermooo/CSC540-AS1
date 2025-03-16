@@ -9,9 +9,7 @@
 #   Teacher:        Dr. Rahul Dubey
 ########################################
 from typing import Optional
-
 import numpy
-from numpy import array
 
 
 
