@@ -41,8 +41,16 @@ class Matrix:
     '''----------------------'''
 
     '''--- Setter Methods ---'''
-    def setValue(self, value, x:int, y:int) -> int:
-        if self.getCoordinateValue(x,y) is None:
+    def setValue(self, value, x:int, y:int, Override : bool = False) -> int:
+        """
+
+        :param value: The value to be placed into the Matrix
+        :param x:       The x coordinate within the Matrix that is desired to be set
+        :param y:       The y coordinate within the Matrix that is desired to be set
+        :param Override: If set to True, will not check if there is already a value set in the coordinate and will overwrite it.
+        :return:        If the value is set in the coordinate, returns 1, else returns 0. If Override == True, will always return 1
+        """
+        if Override or self.getCoordinateValue(x,y) is None:
             self.__matrix[y][x] = value
             return 1
         else:
