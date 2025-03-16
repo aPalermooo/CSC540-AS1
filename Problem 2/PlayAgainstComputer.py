@@ -1,3 +1,14 @@
+########################################
+#   Name:           Matrix.py
+#   Description:    AS1 : Problem 2
+#                       Wires TicTacToe.py to a tree of possible states and competes against the player in a game
+#                           of tictactoe using adversary search
+#   Author:         Xander Palermo <ajp2s@missouristate.edu>
+#   Date:           16 March 2025
+#
+#   Class:          CSC 540 - Introduction to Artificial Intelligence
+#   Teacher:        Dr. Rahul Dubey
+########################################
 from random import randint
 from Matrix import Matrix
 from TicTacToe import Game
